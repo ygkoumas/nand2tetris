@@ -1,0 +1,6 @@
+# test
+*.tst
+# output
+*.out
+# compare
+*.cmp

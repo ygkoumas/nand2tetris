@@ -1,0 +1,7 @@
+CHIP Or15th{
+    IN a[16];
+    OUT out;
+
+    PARTS:
+    Or(a=a[15], out=out);
+}

@@ -1,0 +1,33 @@
+/**
+ * A 16-bit counter with load and reset control bits.
+ * if      (reset[t] == 1) out[t+1] = 0
+ * else if (load[t] == 1)  out[t+1] = in[t]
+ * else if (inc[t] == 1)   out[t+1] = out[t] + 1  (integer addition)
+ * else                    out[t+1] = out[t]
+ */
+
+CHIP PC {
+    IN in[16],reset,load,inc;
+    OUT out[16];
+
+    PARTS:
+    //else                    out[t+1] = out[t]
+    Register(in=outcont, load=true, out=prevout);
+
+    //else if (inc[t] == 1)   out[t+1] = out[t] + 1  (integer addition)
+    Bit(in=inc, load=true, out=preinc);
+
+    Inc16(in=prevout, out=incprevout);
+    Mux16(a=prevout, b=incprevout, sel=preinc, out=incout);
+
+    //else if (load[t] == 1)  out[t+1] = in[t]
+    Bit(in=load, load=true, out=preload);
+
+    Register(in=in, load=true, out=previn);
+    Mux16(a=incout, b=previn, sel=preload, out=loadout);
+
+    //if      (reset[t] == 1) out[t+1] = 0
+    Bit(in=reset, load=true, out=prereset);
+
+    Mux16(a=loadout, b=false, sel=prereset, out=resetout, out=outcont, out=out);
+}

@@ -1,0 +1,23 @@
+/**
+ * 1-bit register:
+ * If load[t] == 1 then out[t+1] = in[t]
+ *                 else out does not change (out[t+1] = out[t])
+ */
+
+CHIP Bit {
+    IN in, load;
+    OUT out;
+
+    PARTS:
+    DFF(in=in, out=indff);
+    DFF(in=load, out=loaddff);
+
+    And(a=indff, b=loaddff, out=inout);
+    Not(in=loaddff, out=notloaddff);
+    And(a=outdff, b=notloaddff, out=outout);
+    Or(a=inout, b=outout, out=outcont);
+
+    DFF(in=outcont, out=outdff);
+
+    Or(a=outcont, b=outcont, out=out);
+}

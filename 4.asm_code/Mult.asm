@@ -38,8 +38,6 @@ M=D
 	@LOOP_R0_TIMES
 	D,JGE
 
-(END_LOOP_n)
-
 // end program
 (END)
 @END

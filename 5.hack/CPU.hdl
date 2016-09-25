@@ -45,11 +45,10 @@ CHIP CPU {
 	// D register
 	Register(in=ALUout, load=instruction[4], out=DRegisterOut);
 
-
 	// M memory
 	Or16(a=ALUout, b=ALUout, out=outM);
 	Or(a=instruction[3], b=instruction[3], out=writeM);
-	Or16(a=ARegisterOut, b=ARegisterOut, out=addressM);
+	Or16(a=ARegisterOut, b=ARegisterOut, out[0..14]=addressM);
 
 	// pc
 

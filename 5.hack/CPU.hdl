@@ -52,7 +52,7 @@ CHIP CPU {
 	Or16(a=ARegisterOut, b=ARegisterOut, out[0..14]=addressM);
 
 	// pc
-	Not(in=ALUng, out=NotALUng)
+	Not(in=ALUng, out=NotALUng);
 	And(a=instruction[0], b=NotALUng, out=posjmp);
 	And(a=instruction[1], b=ALUzr, out=zerojmp);
 	And(a=instruction[2], b=ALUng, out=negjmp);
@@ -60,4 +60,7 @@ CHIP CPU {
 	Or(a=posjmpORzerojmp, b=negjmp, out=posjmpORzerojmpORnegjmp);
 	PC(in=ARegisterOut, load=posjmpORzerojmpORnegjmp, inc=true, reset=reset, out[0..14]=pc);
 
+	// ALU
+	Mux16(a=ARegisterOut, b=inM, sel=instruction[12], out=ALUy);
+	ALU(x=DRegisterOut, y=ALUy, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=ALUout, zr=ALUzr, ng=ALUng);
 }

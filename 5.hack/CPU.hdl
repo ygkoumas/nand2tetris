@@ -40,11 +40,11 @@ CHIP CPU {
 	Not(in=instruction[15],out=NotInstruction15);
 	Mux16(a=instruction, b=ALUout, sel=instruction[15], out=ARegisterIn);
 	Or(a=NotInstruction15, b=instruction[5], out=ARegisterLoad);
-	Register(in=ARegisterIn, load=ARegisterLoad, out=ARegisterOut);
+	ARegister(in=ARegisterIn, load=ARegisterLoad, out=ARegisterOut);
 
 	// D register
 	And(a=instruction[4], b=instruction[15], out=Dload);
-	Register(in=ALUout, load=Dload, out=DRegisterOut);
+	DRegister(in=ALUout, load=Dload, out=DRegisterOut);
 
 	// M memory
 	Or16(a=ALUout, b=ALUout, out=outM);
@@ -58,7 +58,9 @@ CHIP CPU {
 	And(a=instruction[2], b=ALUng, out=negjmp);
 	Or(a=posjmp, b=zerojmp, out=posjmpORzerojmp);
 	Or(a=posjmpORzerojmp, b=negjmp, out=posjmpORzerojmpORnegjmp);
-	PC(in=ARegisterOut, load=posjmpORzerojmpORnegjmp, inc=true, reset=reset, out[0..14]=pc);
+	And(a=instruction[15], b=posjmpORzerojmpORnegjmp, out=PCload);
+	Not(in=PCload, out=PCinc);
+	PC(in=ARegisterOut, load=PCload, inc=PCinc, reset=reset, out[0..14]=pc);
 
 	// ALU
 	Mux16(a=ARegisterOut, b=inM, sel=instruction[12], out=ALUy);

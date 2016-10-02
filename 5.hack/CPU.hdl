@@ -53,9 +53,15 @@ CHIP CPU {
 
 	// pc
 	Not(in=ALUng, out=NotALUng);
-	And(a=instruction[0], b=NotALUng, out=posjmp);
+	Not(in=ALUzr, out=NotALUzr);
+	And(a=NotALUng, b=NotALUzr, out=posALUout);
+	And(a=instruction[0], b=posALUout, out=posjmp);
+
 	And(a=instruction[1], b=ALUzr, out=zerojmp);
-	And(a=instruction[2], b=ALUng, out=negjmp);
+
+	And(a=ALUng, b=NotALUzr, out=negALUout);
+	And(a=instruction[2], b=negALUout, out=negjmp);
+
 	Or(a=posjmp, b=zerojmp, out=posjmpORzerojmp);
 	Or(a=posjmpORzerojmp, b=negjmp, out=posjmpORzerojmpORnegjmp);
 	And(a=instruction[15], b=posjmpORzerojmpORnegjmp, out=PCload);

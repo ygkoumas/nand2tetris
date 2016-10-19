@@ -5,7 +5,7 @@ class IOFile:
 
 	def file_to_array(self):
 		fo = open(self.shared_data.input_file_name, 'r')
-		self.shared_data.io_file = fo.readlines()
+		self.shared_data.io_file = map(lambda line: line.replace(' ', ''), fo.readlines())
 
 	def array_to_file(self):
 		file_name = self.shared_data.io_file.replace('asm', 'hack')

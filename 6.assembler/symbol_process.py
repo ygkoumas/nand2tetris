@@ -12,12 +12,12 @@ class SymbolProcess:
 		enumerate_instractions = enumerate(self.shared_data.io_file)
 		for index, value in enumerate_instractions:
 			if '(' in value:
-				symbol = re.sub('[()" "]', '', value)
+				symbol = re.sub('[()]', '', value)
 				if not self.symbol_table.contains(symbol):
 					self.symbol_table.add_symbol(symbol, labels)
 					labels += 1
 			elif '@' in value:
-				symbol = re.sub('[@" "]', '', value)
+				symbol = re.sub('@', '', value)
 				if not self.symbol_table.contains(symbol):
 					self.symbol_table.add_symbol(symbol, next_address + index)
 					next_address += 1
@@ -29,7 +29,7 @@ class SymbolProcess:
 	def replace_symbols(self):
 		for index, value in self.shared_data.symbol_process:
 			if '@' in value:
-				self.shared_data.symbol_process[index] = '@'+self.symbol_table.get_address(re.sub('[@" "]', '', value))
+				self.shared_data.symbol_process[index] = '@'+self.symbol_table.get_address(re.sub('@', '', value))
 
 	def process(self):
 		find_all_symbols(self)

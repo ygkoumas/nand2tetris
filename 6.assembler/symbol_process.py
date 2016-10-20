@@ -6,6 +6,11 @@ class SymbolProcess:
 		self.shared_data = shared_data
 		self.symbol_table = SymbolTable()
 
+	def process(self):
+		find_all_symbols(self)
+		remove_labels(self)
+		replace_symbols(self)
+
 	def find_all_symbols(self):
 		labels = 0
 		next_address = 16
@@ -30,11 +35,6 @@ class SymbolProcess:
 		for index, value in self.shared_data.symbol_process:
 			if '@' in value:
 				self.shared_data.symbol_process[index] = '@'+self.symbol_table.get_address(re.sub('@', '', value))
-
-	def process(self):
-		find_all_symbols(self)
-		remove_labels(self)
-		replace_symbols(self)
 
 
 

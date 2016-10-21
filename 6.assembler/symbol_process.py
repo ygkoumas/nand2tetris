@@ -7,9 +7,9 @@ class SymbolProcess:
 		self.symbol_table = SymbolTable()
 
 	def process(self):
-		find_all_symbols(self)
-		remove_labels(self)
-		replace_symbols(self)
+		self.find_all_symbols()
+		self.remove_labels()
+		self.replace_symbols()
 
 	def find_all_symbols(self):
 		labels = 0
@@ -19,12 +19,14 @@ class SymbolProcess:
 			if '(' in value:
 				symbol = re.sub('[()]', '', value)
 				if not self.symbol_table.contains(symbol):
-					self.symbol_table.add_symbol(symbol, labels)
+					self.symbol_table.add_symbol(symbol, labels + index)
 					labels += 1
-			elif '@' in value:
+		enumerate_instractions = enumerate(self.shared_data.io_file)
+		for index, value in enumerate_instractions:
+			if '@' in value:
 				symbol = re.sub('@', '', value)
-				if not self.symbol_table.contains(symbol):
-					self.symbol_table.add_symbol(symbol, next_address + index)
+				if not (self.symbol_table.contains(symbol) or symbol.isdigit()):
+					self.symbol_table.add_symbol(symbol, next_address)
 					next_address += 1
 
 
@@ -32,9 +34,12 @@ class SymbolProcess:
 		self.shared_data.symbol_process = [instraction for instraction  in self.shared_data.io_file if not '(' in instraction]
 
 	def replace_symbols(self):
-		for index, value in self.shared_data.symbol_process:
+		enumerate_instractions = enumerate(self.shared_data.symbol_process)
+		for index, value in enumerate_instractions:
 			if '@' in value:
-				self.shared_data.symbol_process[index] = '@'+self.symbol_table.get_address(re.sub('@', '', value))
+				symbol = re.sub('@', '', value)
+				if not symbol.isdigit():
+					self.shared_data.symbol_process[index] = '@'+str(self.symbol_table.get_address(symbol))
 
 
 

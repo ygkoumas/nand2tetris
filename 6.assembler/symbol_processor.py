@@ -1,12 +1,12 @@
 import re
 
-class SymbolProcess:
+class SymbolProcessor:
 	'''covert symbolic assembly to assembly without symbols'''
 	def __init__(self, shared_data):
 		self.shared_data = shared_data
 		self.symbol_table = SymbolTable()
 
-	def process(self):
+	def run(self):
 		self.find_all_symbols()
 		self.remove_labels()
 		self.replace_symbols()
@@ -31,15 +31,15 @@ class SymbolProcess:
 
 
 	def remove_labels(self):
-		self.shared_data.symbol_process = [instraction for instraction  in self.shared_data.io_file if not '(' in instraction]
+		self.shared_data.symbol_processor = [instraction for instraction  in self.shared_data.io_file if not '(' in instraction]
 
 	def replace_symbols(self):
-		enumerate_instractions = enumerate(self.shared_data.symbol_process)
+		enumerate_instractions = enumerate(self.shared_data.symbol_processor)
 		for index, value in enumerate_instractions:
 			if '@' in value:
 				symbol = re.sub('@', '', value)
 				if not symbol.isdigit():
-					self.shared_data.symbol_process[index] = '@'+str(self.symbol_table.get_address(symbol))
+					self.shared_data.symbol_processor[index] = '@'+str(self.symbol_table.get_address(symbol))
 
 
 

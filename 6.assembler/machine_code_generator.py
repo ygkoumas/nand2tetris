@@ -5,9 +5,9 @@ class MachineCodeGenerator:
 		self.shared_data = shared_data
 
 	def run(self):
-		self.shared_data.machine_code_generator = map(self.gen_code, self.shared_data.parser)
+		self.shared_data.machine_code_generator = map(self._run, self.shared_data.parser)
 
-	def gen_code(self, parsed_instruction):
+	def _run(self, parsed_instruction):
 		if  parsed_instruction.number != '':
 			number = binary(parsed_instruction.number)
 			result = ParsedInstruction(number=number)

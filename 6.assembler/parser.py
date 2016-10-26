@@ -6,10 +6,10 @@ class Parser:
 	def __init__(self, shared_data):
 		self.shared_data = shared_data
 
-	def parse(self):
-		self.shared_data.parser = map(self._parse, self.shared_data.symbol_process)
+	def run(self):
+		self.shared_data.parser = map(self._run, self.shared_data.symbol_processor)
 
-	def _parse(self, instruction):
+	def _run(self, instruction):
 		if '@' in instruction:
 			number=instruction.replace('@','')
 			result = ParsedInstruction(number=number)

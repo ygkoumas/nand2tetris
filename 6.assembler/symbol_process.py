@@ -19,7 +19,7 @@ class SymbolProcess:
 			if '(' in value:
 				symbol = re.sub('[()]', '', value)
 				if not self.symbol_table.contains(symbol):
-					self.symbol_table.add_symbol(symbol, labels + index)
+					self.symbol_table.add_symbol(symbol, index - labels)
 					labels += 1
 		enumerate_instractions = enumerate(self.shared_data.io_file)
 		for index, value in enumerate_instractions:
@@ -69,7 +69,8 @@ class SymbolTable:
 			'R14': 14,
 			'R15': 15,
 			'SCREEN': 0x4000,
-			'KBD': 0x600}
+			'KBD': 0x600
+		}
 
 	def add_symbol(self, symbol, address):
 		self.symbols[symbol] = address

@@ -1,0 +1,6 @@
+# compiled python
+*.pyc
+# hack assembly language
+*.asm
+# hack machine language
+*.hack

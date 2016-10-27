@@ -3,9 +3,10 @@ import sys
 from shared_data import SharedData
 
 from io_file import IOFile
-#from symbol_process import SymbolProcess
-#from parser import Parser
-#from code import Code
+from symbol_processor import SymbolProcessor
+from parser import Parser
+from machine_code_generator import MachineCodeGenerator
+from unparser import Unparser
 
 
 # get input file name
@@ -14,14 +15,20 @@ try:
 except IndexError:
 	print('there is no file.asm argument')
 
-# here i should create the data object in order to pass the parameter input_file
-
 
 shared_data = SharedData(input_file_name)
 
 io_file = IOFile(shared_data)
+symbol_processor = SymbolProcessor(shared_data)
+parser = Parser(shared_data)
+machine_code_generator = MachineCodeGenerator(shared_data)
+unparser = Unparser(shared_data)
+
+
 io_file.file_to_array()
-
-# symbol_process = SymbolProcess(shared_data)
-
+symbol_processor.run()
+parser.run()
+machine_code_generator.run()
+unparser.run()
+io_file.array_to_file()
 

@@ -1,7 +1,7 @@
 import re
 
 class IOFile:
-	'''conversts files to arrays and the opposite'''
+	'''converts input file.asm to array and processed array to output file.hack'''
 	def __init__(self, shared_data):
 		self.shared_data = shared_data
 
@@ -15,3 +15,4 @@ class IOFile:
 		fo = open(file_name, 'w')
 		fo.write('\n'.join(self.shared_data.unparser))
 		fo.close()
+

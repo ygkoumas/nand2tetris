@@ -11,12 +11,12 @@ class Parser:
 
 	def _run(self, instruction):
 		if '@' in instruction:
-			number=instruction.replace('@','')
+			number = instruction.replace('@','')
 			result = ParsedInstruction(number=number)
 		else:
-			dest=self.dest(instruction)
-			comp=self.comp(instruction)
-			jump=self.jump(instruction)
+			dest = self.dest(instruction)
+			comp = self.comp(instruction)
+			jump = self.jump(instruction)
 			result = ParsedInstruction(dest=dest, comp=comp, jump=jump)
 		return result
 
@@ -28,3 +28,4 @@ class Parser:
 
 	def comp(self, instruction):
 		return re.sub('.*=|;.*', '', instruction)
+

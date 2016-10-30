@@ -1,7 +1,7 @@
 import re
 
 class SymbolProcessor:
-	'''covert symbolic assembly to assembly without symbols'''
+	'''convert symbolic assembly to assembly without symbols'''
 	def __init__(self, shared_data):
 		self.shared_data = shared_data
 		self.symbol_table = SymbolTable()

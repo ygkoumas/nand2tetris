@@ -8,3 +8,4 @@ class ParsedInstruction:
 		self.dest = dest
 		self.comp = comp
 		self.jump = jump
+

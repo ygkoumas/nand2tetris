@@ -12,9 +12,9 @@ class MachineCodeGenerator:
 			number = binary(parsed_instruction.number)
 			result = ParsedInstruction(number=number)
 		else:
-			dest=self.dest(parsed_instruction)
-			comp=self.comp(parsed_instruction)
-			jump=self.jump(parsed_instruction)
+			dest = self.dest(parsed_instruction)
+			comp = self.comp(parsed_instruction)
+			jump = self.jump(parsed_instruction)
 			result = ParsedInstruction(dest=dest, comp=comp, jump=jump)
 		return result
 

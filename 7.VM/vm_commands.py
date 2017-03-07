@@ -147,11 +147,8 @@ pop
 	return result
 
 segment_map = {
-	'static' : '',
 	'local' : 'LCL',
 	'argument' : 'ARG',
 	'this' : 'THIS',
 	'that' : 'THAT',
-	'temp' : 'TEMP',
-	'pointer' : '',
 }

@@ -1,5 +1,7 @@
-import vm_commands
-from parsed_instruction import ParsedInstruction
+from vm_commands import arithmetic_boolean as vm_abc
+from vm_commands import memory_access as vm_mac
+from vm_commands import program_flow as vm_pfc
+from vm_commands import function_calling as vm_fcc
 
 class CodeWriter:
 	def __init__(self, shared_data):
@@ -8,24 +10,41 @@ class CodeWriter:
 	def run(self):
 		self.shared_data.code_writer = map(self._run, self.shared_data.parser)
 
-	# pi for parsed_instruction
+	# pi for parsed-instruction
 	def _run(self, pi):
-		if  pi.command in 'pushpop':
-			return vm_comands_map[pi.command](pi.segment, pi.integer)
-		else:
-			return vm_comands_map[pi.command]()
+		return vm_commands_map[pi[0]](*pi[1:])
 
-
-vm_comands_map = {
-	'add' : vm_commands.c_add,
-	'sub' : vm_commands.c_sub,
-	'eq' : vm_commands.c_eq,
-	'gt' : vm_commands.c_gt,
-	'lt' : vm_commands.c_lt,
-	'and' : vm_commands.c_and,
-	'or': vm_commands.c_or,
-	'not' : vm_commands.c_not,
-	'neg' : vm_commands.c_neg,
-	'push' : vm_commands.c_push,
-	'pop' : vm_commands.c_pop,
+vm_commands_map = {}
+arithmetic_boolean_commands = {
+	'add' : vm_abc.c_add,
+	'sub' : vm_abc.c_sub,
+	'eq' : vm_abc.c_eq,
+	'gt' : vm_abc.c_gt,
+	'lt' : vm_abc.c_lt,
+	'and' : vm_abc.c_and,
+	'or': vm_abc.c_or,
+	'not' : vm_abc.c_not,
+	'neg' : vm_abc.c_neg,
 }
+vm_commands_map.update(arithmetic_boolean_commands)
+
+memory_access_commands = {
+	'push' : vm_mac.c_push,
+	'pop' : vm_mac.c_pop,
+}
+vm_commands_map.update(memory_access_commands)
+program_flow_commands = {
+	'label' : vm_pfc.c_label,
+	'goto' : vm_pfc.c_goto,
+	'if-goto' : vm_pfc.c_if_goto,
+}
+vm_commands_map.update(program_flow_commands)
+
+tobeusedlater='''
+function_calling_commands = {
+	'function' : vm_fcc.c_function,
+	'call' : vm_fcc.c_call,
+	'return' : vm_fcc.c_return,
+}
+vm_commands_map.update(function_calling_commands)
+'''

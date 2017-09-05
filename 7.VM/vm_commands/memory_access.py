@@ -1,3 +1,8 @@
+file_name = None
+def init(fn):
+	global file_name
+	file_name = fn
+
 def c_push(segment, number):
 	push = '''\
 @SP
@@ -13,7 +18,7 @@ M=M+1\
 			push
 
 	elif segment == 'static':
-		result = '@filename.' + number +\
+		result = '@{}{}'.format(file_name, number) +\
 			'\nD=M\n' +\
 			push
 
@@ -27,10 +32,14 @@ M=M+1\
 			'\nD=M\n' +\
 			push
 	else:
+		set_var_address = '\nA=M+D'
+		if int(number) < 0:
+			number = number.replace('-', '')
+			set_var_address = '\nA=M-D'
                 result = '@' + number +\
                         '\nD=A' +\
                         '\n@'+segment_map[segment] +\
-                        '\nA=M+D' +\
+			set_var_address +\
                         '\nD=M\n' +\
 			push
 
@@ -52,7 +61,7 @@ M=0
 A=A+1
 M=0'''
 	if segment == 'static':
-		result = '@filename.' + number +\
+		result = '@{}{}'.format(file_name, number) +\
 			'\nD=A\n' +\
 			pop
 
@@ -69,10 +78,14 @@ M=0'''
 
 
 	else:
+		set_var_address = '\nD=M+D'
+		if int(number) < 0:
+			number = number.replace('-', '')
+			set_var_address = '\nD=M-D'
 		result = '@'+ number +\
 '\nD=A'+\
 '\n@'+ segment_map[segment]+\
-'\nD=D+M\n'+\
+set_var_address + '\n'+\
 pop
 	return result
 

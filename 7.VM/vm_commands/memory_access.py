@@ -26,6 +26,12 @@ M=M+1\
 		result = '@'+str(int(number) + 5) +\
 			'\nD=M\n' +\
 			push
+
+	elif segment == 'vmsegment':
+		result = '@'+str(int(number) + 13) +\
+			'\nD=M\n' +\
+			push
+
 	elif segment == 'pointer':
 		address = '@THIS' if int(number) == 0 else '@THAT'
 		result = address +\
@@ -67,6 +73,11 @@ M=0'''
 
 	elif segment == 'temp':
 		result = '@'+str(int(number) + 5) +\
+			'\nD=A\n' +\
+			pop
+
+	elif segment == 'vmsegment':
+		result = '@'+str(int(number) + 13) +\
 			'\nD=A\n' +\
 			pop
 

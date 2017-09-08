@@ -71,13 +71,13 @@ def c_return():
 	del FUNCTION_STACK[-1]
 
 	save_return_label = memory_access.c_push('local', '-5') + '\n'+\
-		memory_access.c_pop('temp', '0')
+		memory_access.c_pop('vmsegment', '0')
 	save_arg_num = memory_access.c_push('temp', '-4') + '\n'+\
 		memory_access.c_push('constant', '5') + '\n'+\
 		arithmetic_boolean.c_sub() + '\n'+\
 		memory_access.c_push('temp', '-3') + '\n'+\
 		arithmetic_boolean.c_sub() + '\n'+\
-		memory_access.c_pop('temp', '1')
+		memory_access.c_pop('vmsegment', '1')
 
 	push_return_value = memory_access.c_pop('argument', '0')
 	set_sp_for_recover = '''\
@@ -91,15 +91,16 @@ M=D'''
 	pop_ARG = memory_access.c_pop('temp', '-3')
 	pop_LCL = memory_access.c_pop('temp', '-4')
 
+#vmsegment is on 13 register
 	set_sp = '''\
-@6
+@14
 D=M
 @SP
 M=M-D'''
 
 	#return
 	goto_caller = '''\
-@5
+@13
 A=M
 0;JMP'''
 

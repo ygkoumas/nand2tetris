@@ -44,7 +44,7 @@ D=M
 D=D-A
 @ARG
 M=D\
-'''.format(5+int(arg_int))
+'''.format(5+int(args_int))
 
 	
 

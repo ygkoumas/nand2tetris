@@ -14,7 +14,10 @@ def get_call_id():
 	return str(call_id)
 
 def c_function(function_name, local_variables_int):
-	FUNCTION_STACK.append(function_name)
+	if len(FUNCTION_STACK) == 2:
+		FUNCTION_STACK[1] = function_name
+	else:
+		FUNCTION_STACK.append(function_name)
 
 	result = ''#program_flow.c_goto('avoid-function-now')
 	result += '\n({})'.format(function_name)
@@ -68,8 +71,6 @@ M=D\
 	return '\n'.join(result_list)
 
 def c_return():
-	del FUNCTION_STACK[-1]
-
 	save_return_label = memory_access.c_push('local', '-5') + '\n'+\
 		memory_access.c_pop('vmsegment', '0')
 	save_arg_num = memory_access.c_push('temp', '-4') + '\n'+\

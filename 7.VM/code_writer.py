@@ -6,6 +6,7 @@ from vm_commands.__init__ import init as vmc_init
 
 class CodeWriter:
 	def __init__(self, shared_data):
+		self.is_asm = False
 		self.shared_data = shared_data
 
 	def run(self):
@@ -14,6 +15,15 @@ class CodeWriter:
 
 	# pi for parsed-instruction
 	def _run(self, pi):
+		if pi[0] == '<asm>':
+			self.is_asm = True
+			return ''
+		elif pi[0] == '</asm>':
+			self.is_asm = False
+			return ''
+		elif self.is_asm:
+			return ''.join(pi)
+
 		return vm_commands_map[pi[0]](*pi[1:])
 
 vm_commands_map = {}

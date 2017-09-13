@@ -1,0 +1,33 @@
+<asm>
+//Set SP
+@256
+D=A
+@SP
+M=D
+
+//Set LCL
+@0
+D=A
+@LCL
+M=D
+
+//Set ARG
+@0
+D=A
+@ARG
+M=D
+
+//Set THIS
+@0
+D=A
+@THIS
+M=D
+
+//Set THAT
+@0
+D=A
+@THAT
+M=D
+</asm>
+
+call Sys.init 0

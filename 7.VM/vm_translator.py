@@ -21,6 +21,7 @@ for f in ['Main.vm', 'Sys.vm']:
 	if f in vm_files:
 		vm_files.remove(f)
 		vm_files.appendleft(f)
+vm_files.appendleft('../BootstrapCode.vm')
 
 shared_data = SharedData(input_folder_name)
 

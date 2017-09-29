@@ -1,0 +1,143 @@
+/** Implements a graphical square. */
+class Square {
+
+	field int x, y; // screen location of the square's top-left corner
+	field int size; // length of this square, in pixels
+	field boolean active;
+
+	/** Constructs a new square with a given location and size. */
+	constructor Square new(int Ax, int Ay, int Asize) {
+		let x = Ax;
+		let y = Ay;
+		let active = true;
+		let size = Asize;
+		do draw();
+		return this;
+	}
+
+	/** Disposes this square. */
+	method void dispose() {
+		do Memory.deAlloc(this);
+		return;
+	}
+
+	/** Draws the square on the screen. */
+	method void draw() {
+		do Screen.setColor(true);
+		do Screen.drawRectangle(x, y, x + size, y + size);
+		return;
+	}
+
+	/** Erases the square from the screen. */
+	method void erase() {
+		do Screen.setColor(false);
+		do Screen.drawRectangle(x, y, x + size, y + size);
+		return;
+	}
+
+	/** Increments the square size by 2 pixels. */
+	method void incSize() {
+		if (size > 249) {
+			return;
+		}
+
+		if ((y + size) > 253) {
+			let y = 253 - size;
+		}
+		if ((x + size) > 509) {
+			let x = 509 - size;
+		}
+		do erase();
+		let size = size + 2;
+		do draw();
+		return;
+	}
+
+	/** Decrements the square size by 2 pixels. */
+	method void decSize() {
+		if (size > 2) {
+			do erase();
+			let size = size - 2;
+			do draw();
+		}
+		return;
+	}
+
+	/** Moves the square up by 2 pixels. */
+	method void moveUp() {
+		if (y > 1) {
+			do Screen.setColor(false);
+			do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
+			let y = y - 2;
+			do Screen.setColor(true);
+			do Screen.drawRectangle(x, y, x + size, y + 1);
+		}
+		return;
+	}
+
+	/** Moves the square down by 2 pixels. */
+	method void moveDown() {
+		if ((y + size) < 254) {
+			do Screen.setColor(false);
+			do Screen.drawRectangle(x, y, x + size, y + 1);
+			let y = y + 2;
+			do Screen.setColor(true);
+			do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
+		}
+		return;
+	}
+
+	/** Moves the square left by 2 pixels. */
+	method void moveLeft() {
+		if (x > 1) {
+			do Screen.setColor(false);
+			do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
+			let x = x - 2;
+			do Screen.setColor(true);
+			do Screen.drawRectangle(x, y, x + 1, y + size);
+		}
+		return;
+	}
+
+	/** Moves the square right by 2 pixels. */
+	method void moveRight() {
+		if ((x + size) < 510) {
+			do Screen.setColor(false);
+			do Screen.drawRectangle(x, y, x + 1, y + size);
+			let x = x + 2;
+			do Screen.setColor(true);
+			do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
+		}
+		return;
+	}
+	method void relocate(int newx, int newy) {
+		do erase();
+		let x = newx;
+		let y = newy;
+		do draw();
+		return;
+	}
+	method int getx () {
+		return x;
+	}
+	method int gety () {
+		return y;
+	}
+	method int getsize () {
+		return size;
+	}
+	method boolean isInside(int xes, int yes, int sizees) {
+		return (((xes+sizees) > x) & ((yes+sizees) > y) & (xes < (x+size)) & (yes < (y+size)));
+	}
+	method boolean isActive() {
+		return active;
+	}
+	method void activate() {
+		let active = true;
+		return;
+	}
+	method void inactivate() {
+		let active = false;
+		return;
+	}
+}

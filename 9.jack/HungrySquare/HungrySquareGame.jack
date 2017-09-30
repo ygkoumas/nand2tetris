@@ -57,8 +57,8 @@ class HungrySquareGame {
 				do square.incSize();
 				do es.inactivate();
 			}
-
-			if (~es.isActive() & ~square.isInside(es.gety(), es.getx(), es.getsize())) {
+			// avoid feedback type rapid square increase
+			if (~es.isActive() & ~square.isInside(506 - es.gety(), 250 - es.getx(), es.getsize())) {
 				do es.relocate(506 - square.getx(), 250 - square.gety());
 				do es.activate();
 			}

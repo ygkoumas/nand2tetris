@@ -37,9 +37,18 @@ class HungrySquareGame {
 		if (direction = 2) { do square.moveDown(); }
 		if (direction = 3) { do square.moveLeft(); }
 		if (direction = 4) { do square.moveRight(); }
-		if (movesCount = 10) { let edibleSquares[0] = Square.new(0, 0, 5); let esLength = esLength + 1; }
-		if (movesCount = 30) { let edibleSquares[1] = Square.new(0, 0, 5); let esLength = esLength + 1; }
-		if (movesCount = 40) { let edibleSquares[2] = Square.new(0, 0, 5); let esLength = esLength + 1; }
+		if (movesCount = 100) {
+			let edibleSquares[0] = Square.new(506 - square.getx(), 250 - square.gety(), 5);
+			let esLength = esLength + 1;
+		}
+		if (movesCount = 300) {
+			let edibleSquares[1] = Square.new(506 - square.getx(), 250 - square.gety(), 5);
+			let esLength = esLength + 1;
+		}
+		if (movesCount = 400) {
+			let edibleSquares[2] = Square.new(506 - square.getx(), 250 - square.gety(), 5);
+			let esLength = esLength + 1;
+		}
 		let movesCount = movesCount + 1;
 		let esIndex = 0;
 		while (esIndex < esLength) {
@@ -50,7 +59,7 @@ class HungrySquareGame {
 			}
 
 			if (~es.isActive() & ~square.isInside(es.gety(), es.getx(), es.getsize())) {
-				do es.relocate(square.gety(), square.getx());
+				do es.relocate(506 - square.getx(), 250 - square.gety());
 				do es.activate();
 			}
 			let esIndex = esIndex + 1;

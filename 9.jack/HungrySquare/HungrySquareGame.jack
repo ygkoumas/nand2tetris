@@ -15,7 +15,7 @@ class HungrySquareGame {
 		// Creates a 30 by 30 pixels square and positions it at the top-left
 		// of the screen.
 		let square = Square.new(0, 0, 10);
-		let direction = 0;	// initial state is no movement
+		let direction = 4; // initial state is movement to the right
 		let edibleSquares = Array.new(3);
 		let movesCount = 0;
 		let esLength = 0;
@@ -64,7 +64,7 @@ class HungrySquareGame {
 			}
 			let esIndex = esIndex + 1;
 		}
-		do Sys.wait(5);	// delays the next movement
+		do Sys.wait(8);	// delays the next movement
 		return;
 	}
 

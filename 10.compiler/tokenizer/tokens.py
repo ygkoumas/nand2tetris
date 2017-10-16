@@ -51,7 +51,7 @@ token_types = ['keyword', 'symbol', 'intConst', 'stringConst', 'identifier']
 tokens = dict(
 	keyword = keyword_set,
 	symbol = symbol_set,
-	intConst = IntegerConstants(),
-	stringConst = StringConstants(),
+	integerConstant = IntegerConstants(),
+	stringConstant = StringConstants(),
 	identifier = Identifiers(),
 )

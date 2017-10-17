@@ -1,10 +1,9 @@
 import re
 from tokens import tokens, token_types
 
-def init(jack_code, curr_index=0):
-	global JACK_CODE, CURR_INDEX
+def init(jack_code):
+	global JACK_CODE
 	JACK_CODE = jack_code
-	CURR_INDEX = curr_index
 
 def run():
 	remove_comments()
@@ -27,8 +26,9 @@ def split_tokens():
 	JACK_CODE = JACK_CODE.split()
 
 def get_token_type():
-	global JACK_CODE
+	global JACK_CODE, TOKENIZED_LIST
 	JACK_CODE = map(_get_token_type, JACK_CODE)
+	TOKENIZED_LIST = JACK_CODE
 
 def _get_token_type(token):
 	for token_type in token_types:
@@ -48,3 +48,6 @@ def _tag_tokens(token_type, token):
 
 def get_jack_code():
 	return JACK_CODE
+
+def get_tokenized_list():
+	return TOKENIZED_LIST

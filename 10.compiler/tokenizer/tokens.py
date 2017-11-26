@@ -46,7 +46,7 @@ class Identifiers:
 			return True
 		return False
 
-token_types = ['keyword', 'symbol', 'intConst', 'stringConst', 'identifier']
+token_types = ['keyword', 'symbol', 'integerConstant', 'stringConstant', 'identifier']
 
 tokens = dict(
 	keyword = keyword_set,

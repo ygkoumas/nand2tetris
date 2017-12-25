@@ -113,10 +113,9 @@ parser_map['constructor'] = _parse_subroutinedec
 def _parse_while():
 	result = [('whileStatement', [])]
 	whl = result[0][1]
-	next_token()
 	whl.append(current_token) # while
 	next_token()
-	whl.append(current_token) # (
+	whl.append(current_token) # '('
 	next_token()
 	whl.extend(_parse_expression(')'))
 	next_token() # only _parse goes to the next itself
@@ -143,7 +142,7 @@ def _parse_do():
 		next_token()
 	d.append(current_token) # (
 	next_token()
-	d.extend(_parse_expressionList(')'))
+	d.extend(_parse_expressionList())
 	d.append(current_token) # symbol )
 	d.append(('symbol', ';')) # symbol ';'
 	next_token()
@@ -160,14 +159,57 @@ def _parse_let():
 	lt.append(current_token) # symbol '='
 	next_token()
 	lt.extend(_parse_expression(';'))
+	lt.append(current_token) # symbol ';'
 	return result
 parser_map['let'] = _parse_let
 
-def _parse_expressionList(closing_token=')'):
+def _parse_expressionList():
+	result = [('expressionList', [])]
+	exl = result[0][1]
+	if current_token[1] == ')':
+		return result
+	exl.extend(_parse_expression(',)'))
+	while current_token[1] == ',':
+		next_token()
+		exl.extend(_parse_expression(',)'))
+	return result
+
+def _parse_expression(closing_tokens=');'):
 	result = [('expression', [])]
 	ex = result[0][1]
-	ex.append(current_token)
-	while current_token[1] != closing_token:
+	ex.extend(_parse_term(closing_tokens))
+	while current_token[1] not in closing_tokens:
+		if current_token[0] == 'symbol':
+			ex.append(current_token)
+		else:
+			ex.extend(_parse_term(closing_tokens))
+		next_token()
+	return result
+
+def _parse_term(closing_tokens=')'):
+	result = [('term', [])]
+	ex = result[0][1]
+	while current_token[1] not in closing_tokens:
+	#	if current_token[1] in {'<','=','>','-','+','/'}:
+	#		prev_token()
+	#		return result
+		if current_token[0] in {'stringConstant', 'integerConstant', 'identifier'} \
+			or current_token[1] == '.':
+			ex.append(current_token)
+		elif current_token[1] == '(':
+			ex.append(current_token)
+			next_token()
+			ex.extend(_parse_expressionList())
+			ex.append(current_token)
+			next_token()
+			return result
+		elif current_token[1] == '[':
+			ex.append(current_token)
+			next_token()
+			ex.extend(_parse_expression(']'))
+			ex.append(current_token)
+			next_token()
+			return result
 		next_token()
 	return result
 

@@ -154,8 +154,16 @@ def _parse_let():
 	lt = result[0][1]
 	lt.append(current_token) # let keyword
 	next_token()
-	lt.append(current_token) # identifier
-	next_token()
+	while current_token[1] != '=':
+		if current_token[1] == '[':
+			lt.append(current_token) # symbol '['
+			next_token()
+			lt.extend(_parse_expression(']'))
+			lt.append(current_token)
+			next_token()
+		else:
+			lt.append(current_token) # identifier
+			next_token()
 	lt.append(current_token) # symbol '='
 	next_token()
 	lt.extend(_parse_expression(';'))
@@ -181,19 +189,19 @@ def _parse_expression(closing_tokens=');'):
 	while current_token[1] not in closing_tokens:
 		if current_token[0] == 'symbol':
 			ex.append(current_token)
+			next_token()
 		else:
 			ex.extend(_parse_term(closing_tokens))
-		next_token()
 	return result
 
 def _parse_term(closing_tokens=')'):
 	result = [('term', [])]
 	ex = result[0][1]
 	while current_token[1] not in closing_tokens:
-	#	if current_token[1] in {'<','=','>','-','+','/'}:
-	#		prev_token()
-	#		return result
-		if current_token[0] in {'stringConstant', 'integerConstant', 'identifier'} \
+		if current_token[1] in {'<','=','>','-','+','/'}:
+		#	prev_token()
+			return result
+		elif current_token[0] in {'stringConstant', 'integerConstant', 'identifier'} \
 			or current_token[1] == '.':
 			ex.append(current_token)
 		elif current_token[1] == '(':

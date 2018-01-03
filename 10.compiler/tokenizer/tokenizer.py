@@ -15,7 +15,7 @@ def run():
 
 def remove_comments():
 	global JACK_CODE
-	JACK_CODE = re.sub('//.*\n|/\*.*\*/', ' ', JACK_CODE)
+	JACK_CODE = re.sub('//.*\n|/\*((?:.|\n)*?)\*/', ' ', JACK_CODE)
 
 def escape_string_spaces():
 	global JACK_CODE

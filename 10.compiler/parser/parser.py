@@ -133,6 +133,46 @@ def _parse_while():
 	return result
 parser_map['while'] = _parse_while
 
+def _parse_if():
+	result = [('ifStatement', [])]
+	whl = result[0][1]
+	whl.append(current_token) # if
+	next_token()
+	whl.append(current_token) # '('
+	next_token()
+	whl.extend(_parse_expression(')'))
+	next_token() # only _parse goes to the next itself
+	whl.append(('symbol', ')')) # )
+	whl.append(current_token) # {
+	next_token()
+	whl.append(('statements', []))
+	st =  whl[-1][1]
+	st.extend(_parse('}'))
+	whl.append(('symbol', '}'))
+	if current_token[1] == 'else':
+		whl.extend(_parse_else())
+	else:
+		prev_token()
+	return result
+parser_map['if'] = _parse_if
+
+def _parse_else():
+	result = []
+	whl = result
+	whl.append(current_token) # else
+	next_token()
+	whl.append(current_token) # {
+	next_token()
+	whl.append(('statements', []))
+	st =  whl[-1][1]
+	st.extend(_parse('}'))
+	whl.append(('symbol', '}'))
+	prev_token()
+	return result
+# it does not need:
+# parser_map['else'] = _parse_else
+# because it is called only by _parse_if
+
 def _parse_do():
 	result = [('doStatement', [])]
 	d = result[0][1]

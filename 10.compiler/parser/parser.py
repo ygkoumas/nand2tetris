@@ -32,6 +32,10 @@ def _parse(closing_token='forever'):
 	result = []
 	if closing_token == 'once':
 		result.extend(parser_map[current_token[1]]())
+		try:
+			next_token()
+		except IndexError:
+			pass
 		return result
 
 	while current_token[1] != closing_token:
@@ -43,7 +47,7 @@ def _parse(closing_token='forever'):
 	try:
 		next_token()
 	except IndexError:
-		return result
+		pass
 	return result
 
 def _parse_class():
@@ -61,7 +65,7 @@ def _parse_class():
 parser_map['class'] = _parse_class
 
 def _parse_classvardec():
-	result = [('varDec', [])]
+	result = [('varDec', [])] if current_token[1] == 'var' else [('classVarDec', [])]
 	vd = result[0][1]
 	vd.append(current_token) # var/field/static
 	next_token()
@@ -72,12 +76,11 @@ def _parse_classvardec():
 		next_token()
 
 	vd.append(current_token) # symbol ';'
-	next_token()
 	return result
 parser_map['var'] = _parse_classvardec
 parser_map['static'] = _parse_classvardec
 parser_map['field'] = _parse_classvardec
-	
+
 def _parse_subroutinedec():
 	result = [('subroutineDec', [])]
 	sr = result[0][1]
@@ -104,7 +107,7 @@ def _parse_subroutinedec():
 	sr[-1][1].append(('statements', [])) # statements
 	sr[-1][1][-1][1].extend(_parse('}')) # statements
 	sr[-1][1].append(('symbol', '}')) # }
-	# i do not think we need this line: next_token()
+	prev_token()
 	return result
 parser_map['function'] = _parse_subroutinedec
 parser_map['method'] = _parse_subroutinedec
@@ -178,17 +181,30 @@ def _parse_expressionList():
 		return result
 	exl.extend(_parse_expression(',)'))
 	while current_token[1] == ',':
+		exl.append(current_token)
 		next_token()
 		exl.extend(_parse_expression(',)'))
 	return result
 
 def _parse_expression(closing_tokens=');'):
+	symbol_stack = [[]]
 	result = [('expression', [])]
 	ex = result[0][1]
-	ex.extend(_parse_term(closing_tokens))
-	while current_token[1] not in closing_tokens:
-		if current_token[0] == 'symbol':
+	while current_token[1] in symbol_stack[-1] or current_token[1] not in closing_tokens:
+		if current_token[1] in symbol_stack[-1]:
 			ex.append(current_token)
+			del symbol_stack[-1]
+			next_token()
+		elif current_token[1] == '~':
+			ex.append(('term', []))
+			trm = ex[-1][1]
+			trm.append(current_token)
+			next_token()
+			trm.extend(_parse_term(closing_tokens))
+		elif current_token[0] == 'symbol':
+			ex.append(current_token)
+			if current_token[1] == '(':
+				symbol_stack.append(')')
 			next_token()
 		else:
 			ex.extend(_parse_term(closing_tokens))
@@ -198,10 +214,10 @@ def _parse_term(closing_tokens=')'):
 	result = [('term', [])]
 	ex = result[0][1]
 	while current_token[1] not in closing_tokens:
-		if current_token[1] in {'<','=','>','-','+','/'}:
+		if current_token[1] in {'<','=','>','-','+','/','|'}:
 		#	prev_token()
 			return result
-		elif current_token[0] in {'stringConstant', 'integerConstant', 'identifier'} \
+		elif current_token[0] in {'stringConstant', 'integerConstant', 'identifier', 'keyword'} \
 			or current_token[1] == '.':
 			ex.append(current_token)
 		elif current_token[1] == '(':
@@ -229,7 +245,7 @@ def _parse_return():
 	if current_token[1] == ';':
 		rs.append(current_token) # symbol ';'
 	else:
-		rs.extend(_parse(';'))
+		rs.extend(_parse_expression(';'))
 		rs.append(('symbol', ';')) # symbol ';'
 	return result
 parser_map['return'] = _parse_return

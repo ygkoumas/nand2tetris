@@ -235,24 +235,25 @@ def _parse_parentheses():
 	return result
 
 def _parse_expression(closing_tokens=');'):
-	symbol_stack = [[]]
 	result = [('expression', [])]
 	ex = result[0][1]
-	while current_token[1] in symbol_stack[-1] or current_token[1] not in closing_tokens:
-		if current_token[1] in symbol_stack[-1]:
-			ex.append(current_token)
-			del symbol_stack[-1]
-			next_token()
-		elif current_token[1] == '~':
+	while current_token[1] not in closing_tokens:
+		if current_token[1] == '~' or (current_token[1] == '-' and old_token[1] in '=('):
 			ex.append(('term', []))
 			trm = ex[-1][1]
 			trm.append(current_token)
 			next_token()
 			trm.extend(_parse_term(closing_tokens))
 		elif current_token[0] == 'symbol':
-			ex.append(current_token)
 			if current_token[1] == '(':
-				symbol_stack.append(')')
+				ex.append(('term', []))
+				trm = ex[-1][1]
+				trm.append(current_token)
+				next_token()
+				trm.extend(_parse_expression())
+				trm.append(current_token)
+			else:
+				ex.append(current_token)
 			next_token()
 		else:
 			ex.extend(_parse_term(closing_tokens))
@@ -262,7 +263,7 @@ def _parse_term(closing_tokens=')'):
 	result = [('term', [])]
 	ex = result[0][1]
 	while current_token[1] not in closing_tokens:
-		if current_token[1] in {'<','=','>','-','+','/','|'}:
+		if current_token[1] in {'<','=','>','-','+','*','/','|'}:
 		#	prev_token()
 			return result
 		elif current_token[0] in {'stringConstant', 'integerConstant', 'identifier', 'keyword'} \

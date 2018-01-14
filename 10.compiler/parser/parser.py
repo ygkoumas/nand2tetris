@@ -18,15 +18,19 @@ def parse():
 
 def next_token():
 	global current_token
+	global old_token
 	global token_index
 	token_index += 1
 	current_token = TOKENIZED_LIST[token_index]
-
+	old_token = TOKENIZED_LIST[token_index-1]
+	#print current_token
 def prev_token():
 	global current_token
+	global old_token
 	global token_index
 	token_index -= 1
 	current_token = TOKENIZED_LIST[token_index]
+	old_token = TOKENIZED_LIST[token_index-1]
 
 def _parse(closing_token='forever'):
 	result = []
@@ -215,8 +219,12 @@ def _parse_let():
 parser_map['let'] = _parse_let
 
 def _parse_expressionList():
-	result = [('expressionList', [])]
-	exl = result[0][1]
+	result = [('expressionList', _parse_parentheses())]
+	return result
+
+def _parse_parentheses():
+	result = []
+	exl = result
 	if current_token[1] == ')':
 		return result
 	exl.extend(_parse_expression(',)'))
@@ -261,9 +269,13 @@ def _parse_term(closing_tokens=')'):
 			or current_token[1] == '.':
 			ex.append(current_token)
 		elif current_token[1] == '(':
+			is_el = False if old_token[0] == 'symbol' else True
 			ex.append(current_token)
 			next_token()
-			ex.extend(_parse_expressionList())
+			if is_el:
+				ex.extend(_parse_expressionList())
+			else:
+				ex.extend(_parse_parentheses())
 			ex.append(current_token)
 			next_token()
 			return result
